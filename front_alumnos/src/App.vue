@@ -45,7 +45,7 @@ const eliminarAlumno = async (id) => {
 const eliminarAlumnoPorId = async (id) => {
   try {
     await axios.delete(
-      `http://98.91.189.71:8080/alumnos/eliminar-alumnos/${id}`,
+      `https://nicolette-tissual-lashunda.ngrok-free.dev/alumnos/eliminar-alumnos/${id}`,
     );
     Swal.fire({
       icon: "success",
@@ -67,7 +67,12 @@ const eliminarAlumnoPorId = async (id) => {
 
 const cargarAlumnos = async () => {
   const response = await axios.get(
-    "http://98.91.189.71:8080/alumnos/traer-alumnos",
+    "https://nicolette-tissual-lashunda.ngrok-free.dev/alumnos/traer-alumnos",
+    {
+      headers: {
+        "ngrok-skip-browser-warning": "69420",
+      },
+    },
   );
   alumnos.value = response.data;
   console.log(alumnos.value);
@@ -76,7 +81,12 @@ const cargarAlumnos = async () => {
 const agregarAlumno = async () => {
   if (editado.value) {
     await axios.put(
-      `http://98.91.189.71:8080/alumnos/editar-alumnos/${nuevoAlumno.value.id}`,
+      `https://nicolette-tissual-lashunda.ngrok-free.dev/alumnos/editar-alumnos/${nuevoAlumno.value.id}`,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+        },
+      },
       nuevoAlumno.value,
     );
     Swal.fire({
@@ -88,7 +98,12 @@ const agregarAlumno = async () => {
     editado.value = false;
   } else {
     await axios.post(
-      "http://98.91.189.71:8080/alumnos/insertar-alumno",
+      "https://nicolette-tissual-lashunda.ngrok-free.dev/alumnos/insertar-alumno",
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+        },
+      },
       nuevoAlumno.value,
     );
     Swal.fire({
