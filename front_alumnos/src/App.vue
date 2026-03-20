@@ -45,7 +45,7 @@ const eliminarAlumno = async (id) => {
 const eliminarAlumnoPorId = async (id) => {
   try {
     await axios.delete(
-      `http://32.192.25.35:8080/alumnos/eliminar-alumnos/${id}`,
+      `http://98.91.189.71:8080/alumnos/eliminar-alumnos/${id}`,
     );
     Swal.fire({
       icon: "success",
@@ -67,7 +67,7 @@ const eliminarAlumnoPorId = async (id) => {
 
 const cargarAlumnos = async () => {
   const response = await axios.get(
-    "http://32.192.25.35:8080/alumnos/traer-alumnos",
+    "http://98.91.189.71:8080/alumnos/traer-alumnos",
   );
   alumnos.value = response.data;
   console.log(alumnos.value);
@@ -76,7 +76,7 @@ const cargarAlumnos = async () => {
 const agregarAlumno = async () => {
   if (editado.value) {
     await axios.put(
-      `http://32.192.25.35:8080/alumnos/editar-alumnos/${nuevoAlumno.value.id}`,
+      `http://98.91.189.71:8080/alumnos/editar-alumnos/${nuevoAlumno.value.id}`,
       nuevoAlumno.value,
     );
     Swal.fire({
@@ -88,7 +88,7 @@ const agregarAlumno = async () => {
     editado.value = false;
   } else {
     await axios.post(
-      "http://32.192.25.35:8080/alumnos/insertar-alumno",
+      "http://98.91.189.71:8080/alumnos/insertar-alumno",
       nuevoAlumno.value,
     );
     Swal.fire({
