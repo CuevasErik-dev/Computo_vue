@@ -82,12 +82,12 @@ const agregarAlumno = async () => {
   if (editado.value) {
     await axios.put(
       `https://nicolette-tissual-lashunda.ngrok-free.dev/alumnos/editar-alumnos/${nuevoAlumno.value.id}`,
+      nuevoAlumno.value,
       {
         headers: {
           "ngrok-skip-browser-warning": "69420",
         },
       },
-      nuevoAlumno.value,
     );
     Swal.fire({
       icon: "success",
@@ -99,12 +99,12 @@ const agregarAlumno = async () => {
   } else {
     await axios.post(
       "https://nicolette-tissual-lashunda.ngrok-free.dev/alumnos/insertar-alumno",
+      nuevoAlumno.value,
       {
         headers: {
           "ngrok-skip-browser-warning": "69420",
         },
       },
-      nuevoAlumno.value,
     );
     Swal.fire({
       icon: "success",
