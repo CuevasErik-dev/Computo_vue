@@ -10,6 +10,7 @@ const nuevoAlumno = ref({
   carrera: "",
   telefono: "",
   imagenurl: "",
+  gmail: "",
 });
 
 const limpiarFormulario = () => {
@@ -19,6 +20,7 @@ const limpiarFormulario = () => {
     carrera: "",
     telefono: "",
     imagenurl: "",
+    gmail: "",
   };
 };
 
@@ -224,6 +226,19 @@ onMounted(cargarAlumnos);
                   required
                 />
               </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="correo" class="form-label">Correo</label>
+                <input
+                  type="email"
+                  pattern=".+@gmail\.com"
+                  id="correo"
+                  v-model="nuevoAlumno.gmail"
+                  class="form-control"
+                  placeholder="usuario@gmail.com"
+                  required
+                />
+              </div>
             </div>
 
             <button type="submit" class="btn btn-primary mt-3">
@@ -237,14 +252,17 @@ onMounted(cargarAlumnos);
         <div class="card shadow mb-4">
           <div class="card-body mx-3">
             <h4 class="card-title mb-3">Tabla de Alumnos</h4>
-            <table class="table table-hover align-middle mx-3">
-              <thead class="table-light">
+            <table
+              class="table table-striped table-info table-hover align-middle mx-3"
+            >
+              <thead class="table-dark">
                 <tr>
                   <th scope="col">ID</th>
                   <th scope="col">Nombre</th>
                   <th scope="col">Apellidos</th>
                   <th scope="col">Carrera</th>
                   <th scope="col">Telefono</th>
+                  <th scope="col">Correo</th>
                   <th scope="col">Imagen</th>
                   <th scope="col">Acciones</th>
                 </tr>
@@ -256,6 +274,7 @@ onMounted(cargarAlumnos);
                   <td>{{ alumno.apellido }}</td>
                   <td>{{ alumno.carrera }}</td>
                   <td>{{ alumno.telefono }}</td>
+                  <td>{{ alumno.gmail }}</td>
                   <td>
                     <img
                       :src="alumno.imagenurl"
