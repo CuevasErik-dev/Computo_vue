@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
-import formulario from "./Components/formulario.vue";
+//import formulario from "./Components/formulario.vue";
 import tablaAlumnos from "./Components/tablaAlumnos.vue";
 
 const carreras = [
