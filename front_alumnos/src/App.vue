@@ -2,15 +2,30 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import formulario from "./Components/formulario.vue";
+import tablaAlumnos from "./Components/tablaAlumnos.vue";
 
+const carreras = [
+  "Ingenieria en Mecatronica",
+  "Ingenieria en Gestion Empresarial",
+  "Ingenieria Industrial",
+  "Ingenieria Civil",
+  "Ingenieria en Sistemas Computacionales",
+  "Licenciatura en Administración",
+  "Licenciatura en Arquitectura",
+  "Licenciatura en Contador Público",
+];
+const filtrarPorCarrera = (carrera) => {
+  return alumnos.value.filter((alumno) => alumno.carrera === carrera);
+};
 const alumnos = ref([]);
 const nuevoAlumno = ref({
   nombre: "",
   apellido: "",
   carrera: "",
   telefono: "",
-  imagenurl: "",
-  gmail: "",
+  imagenURL: "",
+  email: "",
 });
 
 const limpiarFormulario = () => {
@@ -19,8 +34,8 @@ const limpiarFormulario = () => {
     apellido: "",
     carrera: "",
     telefono: "",
-    imagenurl: "",
-    gmail: "",
+    imagenURL: "",
+    email: "",
   };
 };
 
@@ -39,6 +54,7 @@ const eliminarAlumno = async (id) => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       await eliminarAlumnoPorId(id);
+      Swal.fire("Eliminado!", "El alumno ha sido eliminado.", "success");
     }
   });
   await cargarAlumnos();
@@ -47,7 +63,7 @@ const eliminarAlumno = async (id) => {
 const eliminarAlumnoPorId = async (id) => {
   try {
     await axios.delete(
-      `https://nicolette-tissual-lashunda.ngrok-free.dev/alumnos/eliminar-alumnos/${id}`,
+      `https://crud-alumnos-spring.uc.r.appspot.com/alumnos/eliminar-alumnos/${id}`,
     );
     Swal.fire({
       icon: "success",
@@ -69,7 +85,7 @@ const eliminarAlumnoPorId = async (id) => {
 
 const cargarAlumnos = async () => {
   const response = await axios.get(
-    "https://nicolette-tissual-lashunda.ngrok-free.dev/alumnos/traer-alumnos",
+    "https://crud-alumnos-spring.uc.r.appspot.com/alumnos/traer-alumnos",
     {
       headers: {
         "ngrok-skip-browser-warning": "69420",
@@ -83,7 +99,7 @@ const cargarAlumnos = async () => {
 const agregarAlumno = async () => {
   if (editado.value) {
     await axios.put(
-      `https://nicolette-tissual-lashunda.ngrok-free.dev/alumnos/editar-alumnos/${nuevoAlumno.value.id}`,
+      `https://crud-alumnos-spring.uc.r.appspot.com/alumnos/editar-alumno/${nuevoAlumno.value.id}`,
       nuevoAlumno.value,
       {
         headers: {
@@ -100,7 +116,7 @@ const agregarAlumno = async () => {
     editado.value = false;
   } else {
     await axios.post(
-      "https://nicolette-tissual-lashunda.ngrok-free.dev/alumnos/insertar-alumno",
+      "https://crud-alumnos-spring.uc.r.appspot.com/alumnos/insertar-alumno",
       nuevoAlumno.value,
       {
         headers: {
@@ -143,166 +159,119 @@ onMounted(cargarAlumnos);
 
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card shadow p-4 mb-4 mt-4">
-          <h2 class="text-center">Formulario de Alumnos</h2>
-          <form @submit.prevent="agregarAlumno">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="nombre" class="form-label">Nombre</label>
-                <input
-                  type="text"
-                  id="nombre"
-                  pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*"
-                  v-model="nuevoAlumno.nombre"
-                  class="form-control"
-                  required
-                />
-              </div>
+    <div class="card shadow p-4 mb-4 mt-4">
+      <h2 class="text-center">Formulario de Alumnos</h2>
+      <form @submit.prevent="agregarAlumno">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*"
+              v-model="nuevoAlumno.nombre"
+              class="form-control"
+              placeholder="Juan Gomez"
+              required
+            />
+          </div>
 
-              <div class="col-md-6 mb-3">
-                <label for="apellido" class="form-label">Apellidos</label>
-                <input
-                  type="text"
-                  id="apellido"
-                  pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*"
-                  v-model="nuevoAlumno.apellido"
-                  class="form-control"
-                  required
-                />
-              </div>
+          <div class="col-md-6 mb-3">
+            <label for="apellido" class="form-label">Apellidos</label>
+            <input
+              type="text"
+              id="apellido"
+              pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ]+( [A-Za-zÁÉÍÓÚáéíóúÑñ]+)*"
+              v-model="nuevoAlumno.apellido"
+              class="form-control"
+              placeholder="Cuevas Del Valle"
+              required
+            />
+          </div>
 
-              <div class="col-md-6 mb-3">
-                <label for="carrera" class="form-label">Carrera</label>
-                <select
-                  class="form-select"
-                  id="carrera"
-                  v-model="nuevoAlumno.carrera"
-                  required
-                >
-                  <option value="Ingeniería Civil">Ingeniería Civil</option>
-                  <option value="Ingeniería Gestión Empresatial">
-                    Ingeniería Gestión Empresatial
-                  </option>
-                  <option value="Ingeniería Industrial">
-                    Ingeniería Industrial
-                  </option>
-                  <option value="Ingeniería Mecatronica">
-                    Ingeniería Mecatronica
-                  </option>
-                  <option value="Ingeniería en Sistemas">
-                    Ingeniería en Sistemas Computacionales
-                  </option>
-                  <option value="Licenciatura en Administración">
-                    Licenciatura en Administración
-                  </option>
-                  <option value="Licenciatura en Arquitectura">
-                    Licenciatura en Arquitectura
-                  </option>
-                </select>
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label for="telefono" class="form-label">Telefono</label>
-                <input
-                  type="tel"
-                  pattern="^\d{10}$"
-                  inputmode="numeric"
-                  id="telefono"
-                  v-model="nuevoAlumno.telefono"
-                  class="form-control"
-                  required
-                />
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label for="imagenurl" class="form-label">Imagen URL</label>
-                <input
-                  type="text"
-                  id="imagenurl"
-                  v-model="nuevoAlumno.imagenurl"
-                  class="form-control"
-                  required
-                />
-              </div>
-
-              <div class="col-md-6 mb-3">
-                <label for="correo" class="form-label">Correo</label>
-                <input
-                  type="email"
-                  pattern=".+@gmail\.com"
-                  id="correo"
-                  v-model="nuevoAlumno.gmail"
-                  class="form-control"
-                  placeholder="usuario@gmail.com"
-                  required
-                />
-              </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary mt-3">
-              {{ editado ? "Actualizar Alumno" : "Agregar Alumno" }}
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <div class="col-md-12">
-        <div class="card shadow mb-4">
-          <div class="card-body mx-3">
-            <h4 class="card-title mb-3">Tabla de Alumnos</h4>
-            <table
-              class="table table-striped table-info table-hover align-middle mx-3"
+          <div class="col-md-6 mb-3">
+            <label for="carrera" class="form-label">Carrera</label>
+            <select
+              class="form-select"
+              id="carrera"
+              v-model="nuevoAlumno.carrera"
+              required
             >
-              <thead class="table-dark">
-                <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Apellidos</th>
-                  <th scope="col">Carrera</th>
-                  <th scope="col">Telefono</th>
-                  <th scope="col">Correo</th>
-                  <th scope="col">Imagen</th>
-                  <th scope="col">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="alumno in alumnos" :key="alumno.id">
-                  <td>{{ alumno.id }}</td>
-                  <td>{{ alumno.nombre }}</td>
-                  <td>{{ alumno.apellido }}</td>
-                  <td>{{ alumno.carrera }}</td>
-                  <td>{{ alumno.telefono }}</td>
-                  <td>{{ alumno.gmail }}</td>
-                  <td>
-                    <img
-                      :src="alumno.imagenurl"
-                      alt="Imagen del Alumno"
-                      width="50"
-                    />
-                  </td>
-                  <td>
-                    <button
-                      @click="eliminarAlumno(alumno.id)"
-                      class="btn btn-danger mx-2"
-                    >
-                      <i class="bi bi-trash2-fill"></i>
-                    </button>
-                    <button
-                      @click="editarAlumnos(alumno)"
-                      class="btn btn-warning"
-                    >
-                      <i class="bi bi-pencil-fill"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              <option value="Ingeniería Civil">Ingeniería Civil</option>
+              <option value="Ingeniería Gestión Empresatial">
+                Ingeniería Gestión Empresatial
+              </option>
+              <option value="Ingeniería Industrial">
+                Ingeniería Industrial
+              </option>
+              <option value="Ingeniería Mecatronica">
+                Ingeniería Mecatronica
+              </option>
+              <option value="Ingeniería en Sistemas">
+                Ingeniería en Sistemas Computacionales
+              </option>
+              <option value="Licenciatura en Administración">
+                Licenciatura en Administración
+              </option>
+              <option value="Licenciatura en Arquitectura">
+                Licenciatura en Arquitectura
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="telefono" class="form-label">Telefono</label>
+            <input
+              type="tel"
+              pattern="^\d{10}$"
+              inputmode="numeric"
+              id="telefono"
+              v-model="nuevoAlumno.telefono"
+              class="form-control"
+              placeholder="9531308933"
+              required
+            />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="imagenurl" class="form-label">Imagen URL</label>
+            <input
+              type="text"
+              id="imagenurl"
+              v-model="nuevoAlumno.imagenURL"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="correo" class="form-label">Correo</label>
+            <input
+              type="email"
+              id="correo"
+              v-model="nuevoAlumno.email"
+              class="form-control"
+              placeholder="usuario@gmail.com"
+              required
+            />
           </div>
         </div>
-      </div>
+
+        <button type="submit" class="btn btn-primary mt-3">
+          {{ editado ? "Actualizar Alumno" : "Agregar Alumno" }}
+        </button>
+      </form>
     </div>
+  </div>
+  <div class="container">
+    <tablaAlumnos
+      v-for="carrera in carreras"
+      :key="carrera"
+      :carrera="carrera"
+      :datos="filtrarPorCarrera(carrera)"
+      @editar="editarAlumnos"
+      @eliminar="eliminarAlumno"
+    />
   </div>
 </template>
 
