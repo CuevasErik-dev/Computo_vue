@@ -17,7 +17,6 @@ const mostrarTodos = ref(false)
 const LIMITE = 5
 
 
-
 const busqueda = ref('')
 const datosFiltrados = computed(() =>
   props.datos.filter(alumno =>
@@ -72,7 +71,7 @@ const datosMostrados = computed(() =>
             <td>{{ item.nombre }}</td>
             <td>{{ item.apellido }}</td>
             <td><span class="carrera-chip">{{ item.carrera }}</span></td>
-            <td class="td-email">{{ item.email }}</td>
+            <td class="td-email">{{ item.gmail }}</td>
             <td>{{ item.telefono }}</td>
 
             <td>
