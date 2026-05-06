@@ -1,21 +1,20 @@
 import axios from "axios";
 
-const axiosInstancia = axios.create(
-    {
-        baseURL: "http://localhost:8080",
-    },
-    /* {
-        headers: {
-            "ngrok-skip-browser-warning": "69420",
-        },
-    }, */
-);
+const axiosInstancia = axios.create({
+    // 1. Usa la URL de ngrok que te dio la terminal
+    baseURL: "https://nicolette-tissual-lashunda.ngrok-free.dev", 
+    
+    // 2. Todo va dentro del mismo objeto de configuración
+    headers: {
+        "ngrok-skip-browser-warning": "69420",
+        "Content-Type": "application/json"
+    }
+});
+
 axiosInstancia.interceptors.request.use(
     (config) => {
-        // Obtenemos el token del localStorage
         const token = localStorage.getItem('token');
 
-        // Si el token existe, lo añadimos a los headers
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -25,7 +24,6 @@ axiosInstancia.interceptors.request.use(
     (error) => {
         return Promise.reject(error);
     }
-)
-
+);
 
 export default axiosInstancia;

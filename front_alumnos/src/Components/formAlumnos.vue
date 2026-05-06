@@ -84,9 +84,7 @@ const enviarForm = () => {
                         </svg>
                         {{ esEditado ? "Actualizar Alumno" : "Agregar Alumno" }}
                     </button>
-                    <button type="danger" class="btn-danger" @click="emit('limpiar')">
-                        cancelar
-                    </button>
+                    
                 </div>
             </form>
         </div>
