@@ -13,6 +13,10 @@ const props = defineProps({
 
 const emit = defineEmits(['editar', 'eliminar'])
 
+const imprimirTabla = () => {
+  emit('imprimir', { carrera: props.carrera, datos: props.datos })
+}
+
 const mostrarTodos = ref(false)
 const LIMITE = 5
 
@@ -88,6 +92,14 @@ const datosMostrados = computed(() =>
           {{ mostrarTodos ? '▲ Mostrar menos' : `▼ Mostrar más (${datosFiltrados.length - LIMITE} restantes)` }}
         </button>
       </div>
+
+    
+    </div>
+
+    <div class="container">
+      <label class="imprimir">Imprimir</label>
+      <button @click="imprimirTabla" class="btn btn-secundary" title="Imprimir tabla"><i
+          class="bi bi-printer"></i></button>
     </div>
   </div>
 </template>
@@ -95,6 +107,16 @@ const datosMostrados = computed(() =>
 
 
 <style scoped>
+.container {
+  border-radius: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end; /* 👈 esto manda TODO al final */
+  gap: 10px;
+  border: none;
+}
+
 .tabla-carrera {
   margin-bottom: 48px;
   animation: fadeSlideIn 0.4s ease both;
@@ -263,9 +285,10 @@ tbody tr:nth-child(even):hover {
   opacity: 0.88;
   transform: translateY(-1px);
 }
+
 .buscador-wrapper {
-  display:flex;
-  
+  display: flex;
+
   align-items: center;
   gap: 8px;
   margin-bottom: 14px;
@@ -309,5 +332,18 @@ tbody tr:nth-child(even):hover {
   color: #9ca3af;
   font-size: 0.88rem;
   padding: 16px 0;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.btn-secundary {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+  margin-top: 10px;
 }
 </style>
