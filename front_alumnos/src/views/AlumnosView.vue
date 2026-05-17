@@ -67,7 +67,7 @@ const validarCampos = () => {
   const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
   const soloNumeros = /^[0-9]{10}$/;
   //const soloEmail =/^[a-zA-Z0-9._%+-]+@(gmail\.com|hotmail\.com|outlook\.com|tlaxiaco\.tecnm\.mx)$/;
-  
+
 
   if (!soloLetras.test((nuevoAlumno.value.nombre || "").trim())) {
     Swal.fire({
@@ -185,32 +185,45 @@ const cargarAlumnos = async () => {
 };
 
 const agregarAlumno = async () => {
-  if (!validarCampos()) {
-    return;
-  }
+  try {
+    if (!validarCampos()) {
+      return;
+    }
 
-  if (editado.value) {
-    await putAlumnos(nuevoAlumno.value.id, nuevoAlumno.value);
-    Swal.fire({
-      icon: "success",
-      title: "Alumno Actualizado Correctamente",
-      showConfirmButton: false,
-      timer: 1500,
-    });
-    editado.value = false;
-  } else {
-    await postAlumnos(nuevoAlumno.value);
-    Swal.fire({
-      icon: "success",
-      title: "Alumno Agregado Correctamente",
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  }
+    if (editado.value) {
+      await putAlumnos(nuevoAlumno.value.id, nuevoAlumno.value);
+      Swal.fire({
+        icon: "success",
+        title: "Alumno Actualizado Correctamente",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      editado.value = false;
+    } else {
+      await postAlumnos(nuevoAlumno.value);
+      Swal.fire({
+        icon: "success",
+        title: "Alumno Agregado Correctamente",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
 
-  await cargarAlumnos();
-  limpiarFormulario();
-};
+    await cargarAlumnos();
+    limpiarFormulario();
+  } catch (error) {
+    console.log("Eror en la peticion", error)
+    if(error.response && error.response.status === 400){
+      const mensajeBackend = error.response.data.message
+      console.log(mensajeBackend)
+      Swal.fire({
+        title: "Datos incorrectos",
+        text: mensajeBackend,
+        icon:"error"
+      })
+    }
+  };
+}
 
 const editarAlumnos = (alumno) => {
   Swal.fire({
@@ -236,11 +249,11 @@ const imprimirAlumnos = async ({ carrera, datos }) => {
   const printWindow = window.open("", "_blank");
 
   const logoArriba = new URL(
-    "../assets/images/ArribaIEncabezado.png",
+    "../../public/images/ArribaIEncabezado.png",
     import.meta.url,
   ).href;
   const logoAbajo = new URL(
-    "../assets/images/WhatsApp Image 2026-05-06 at 10.34.28.jpeg",
+    "../../public/images/WhatsApp Image 2026-05-06 at 10.34.28.jpeg",
     import.meta.url,
   ).href;
 
@@ -362,8 +375,8 @@ const imprimirAlumnos = async ({ carrera, datos }) => {
 
         <tbody>
           ${datos
-            .map(
-              (alumno) => `
+      .map(
+        (alumno) => `
             <tr>
               <td>${alumno.numeroControl || ""}</td>
               <td>${alumno.nombre || ""}</td>
@@ -372,8 +385,8 @@ const imprimirAlumnos = async ({ carrera, datos }) => {
               <td>${alumno.telefono || ""}</td>
             </tr>
           `,
-            )
-            .join("")}
+      )
+      .join("")}
         </tbody>
 
         <tfoot>
@@ -399,22 +412,10 @@ const imprimirAlumnos = async ({ carrera, datos }) => {
 <template>
   <NavBar />
   <div class="container">
-    <formAlumnos
-      :alumno="nuevoAlumno"
-      :esEditado="editado"
-      @agregar="agregarAlumno"
-      @limpiar="limpiarFormulario"
-    />
+    <formAlumnos :alumno="nuevoAlumno" :esEditado="editado" @agregar="agregarAlumno" @limpiar="limpiarFormulario" />
   </div>
   <div class="container">
-    <tablaAlumnos
-      v-for="carrera in carreras"
-      :key="carrera"
-      :carrera="carrera"
-      :datos="filtrarPorCarrera(carrera)"
-      @editar="editarAlumnos"
-      @eliminar="eliminarAlumno"
-      @imprimir="imprimirAlumnos"
-    />
+    <tablaAlumnos v-for="carrera in carreras" :key="carrera" :carrera="carrera" :datos="filtrarPorCarrera(carrera)"
+      @editar="editarAlumnos" @eliminar="eliminarAlumno" @imprimir="imprimirAlumnos" />
   </div>
 </template>
