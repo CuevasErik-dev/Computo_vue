@@ -249,11 +249,11 @@ const imprimirAlumnos = async ({ carrera, datos }) => {
   const printWindow = window.open("", "_blank");
 
   const logoArriba = new URL(
-    "../../public/images/ArribaIEncabezado.png",
+    "/images/ArribaIEncabezado.png",
     import.meta.url,
   ).href;
   const logoAbajo = new URL(
-    "../../public/images/WhatsApp Image 2026-05-06 at 10.34.28.jpeg",
+    "/images/WhatsApp Image 2026-05-06 at 10.34.28.jpeg",
     import.meta.url,
   ).href;
 
