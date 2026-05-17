@@ -57,6 +57,7 @@ const datosMostrados = computed(() =>
         <thead>
           <tr>
             <th>Imagen</th>
+            <th>No. Control</th>
             <th>Nombre</th>
             <th>Apellidos</th>
             <th>Carrera</th>
@@ -72,6 +73,7 @@ const datosMostrados = computed(() =>
                 :src="item.imagenurl || 'https://ui-avatars.com/api/?name=' + item.nombre + '+' + item.apellido + '&background=a78bfa&color=fff'"
                 :alt="item.nombre" />
             </td>
+            <td class="td-control"><span class="control-chip">{{ item.numeroControl}}</span></td>
             <td>{{ item.nombre }}</td>
             <td>{{ item.apellido }}</td>
             <td><span class="carrera-chip">{{ item.carrera }}</span></td>

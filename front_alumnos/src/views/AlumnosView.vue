@@ -21,6 +21,7 @@ const alumnos = ref([]);
 const nuevoAlumno = ref({
   nombre: "",
   apellido: "",
+  numeroControl: "",
   carrera: "",
   telefono: "",
   imagenurl: "",
@@ -31,6 +32,7 @@ const limpiarFormulario = () => {
   nuevoAlumno.value = {
     nombre: "",
     apellido: "",
+    numeroControl: "",
     carrera: "",
     telefono: "",
     imagenurl: "",
@@ -39,6 +41,104 @@ const limpiarFormulario = () => {
 };
 
 const editado = ref(false);
+
+const errores = ref({
+  nombre: "",
+  apellido: "",
+  telefono: "",
+  email: "",
+  numeroControl: ""
+});
+
+const validarCampos = () => {
+  let valido = true;
+  errores.value = {
+    nombre: "",
+    apellido: "",
+    telefono: "",
+    email: "",
+    numeroControl: ""
+  };
+
+  const PrimeraLetraMayusculaNombre =
+    /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+( [A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?$/;
+  const PrimeraLetraMayusculaApellido =
+    /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+ [A-ZÁÉÍÓÚÑ][a-záéíóúñ]+$/;
+  const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
+  const soloNumeros = /^[0-9]{10}$/;
+  //const soloEmail =/^[a-zA-Z0-9._%+-]+@(gmail\.com|hotmail\.com|outlook\.com|tlaxiaco\.tecnm\.mx)$/;
+  
+
+  if (!soloLetras.test((nuevoAlumno.value.nombre || "").trim())) {
+    Swal.fire({
+      icon: "warning",
+      text: "Datos invalidos en Nombre",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    nuevoAlumno.value.nombre = "";
+    valido = false;
+  }
+  if (!soloLetras.test((nuevoAlumno.value.apellido || "").trim())) {
+    Swal.fire({
+      icon: "warning",
+      text: "Datos invalidos en Apellidos",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    nuevoAlumno.value.apellido = "";
+    valido = false;
+  }
+  if (!soloNumeros.test((nuevoAlumno.value.telefono || "").trim())) {
+    Swal.fire({
+      icon: "warning",
+      text: "Datos invalidos en Telefono",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    nuevoAlumno.value.telefono = "";
+    valido = false;
+  }
+  /* if (!soloEmail.test((nuevoAlumno.value.email || "").trim())) {
+    Swal.fire({
+      icon: "warning",
+      text: "Datos invalidos en Correo electronico",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    nuevoAlumno.value.email = "";
+    valido = false;
+  } */
+  if (
+    !PrimeraLetraMayusculaNombre.test((nuevoAlumno.value.nombre || "").trim())
+  ) {
+    Swal.fire({
+      icon: "warning",
+      text: "El nombre debe comenzar con mayúscula y no contener números",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    nuevoAlumno.value.nombre = "";
+    valido = false;
+  }
+  if (
+    !PrimeraLetraMayusculaApellido.test(
+      (nuevoAlumno.value.apellido || "").trim(),
+    )
+  ) {
+    Swal.fire({
+      icon: "warning",
+      text: "Los apellidos deben comenzar con mayúscula y no contener números",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+    nuevoAlumno.value.apellido = "";
+    valido = false;
+  }
+
+  return valido;
+};
+
 const eliminarAlumno = async (id) => {
   Swal.fire({
     title: "¿Estás seguro?",
@@ -85,6 +185,10 @@ const cargarAlumnos = async () => {
 };
 
 const agregarAlumno = async () => {
+  if (!validarCampos()) {
+    return;
+  }
+
   if (editado.value) {
     await putAlumnos(nuevoAlumno.value.id, nuevoAlumno.value);
     Swal.fire({
@@ -135,7 +239,10 @@ const imprimirAlumnos = async ({ carrera, datos }) => {
     "../assets/images/ArribaIEncabezado.png",
     import.meta.url,
   ).href;
-  const logoAbajo = new URL("../assets/images/Abajo.png", import.meta.url).href;
+  const logoAbajo = new URL(
+    "../assets/images/WhatsApp Image 2026-05-06 at 10.34.28.jpeg",
+    import.meta.url,
+  ).href;
 
   const html = `
     <!DOCTYPE html>
@@ -244,7 +351,8 @@ const imprimirAlumnos = async ({ carrera, datos }) => {
               <h1>${carrera}</h1>
             </th>
           </tr>
-          <tr class="col-headers">
+          <tr class="col-headers">  
+            <th>No. Control</th>
             <th>Nombre</th>
             <th>Apellidos</th>
             <th>Email</th>
@@ -257,6 +365,7 @@ const imprimirAlumnos = async ({ carrera, datos }) => {
             .map(
               (alumno) => `
             <tr>
+              <td>${alumno.numeroControl || ""}</td>
               <td>${alumno.nombre || ""}</td>
               <td>${alumno.apellido || ""}</td>
               <td>${alumno.gmail || "N/A"}</td>
@@ -305,6 +414,7 @@ const imprimirAlumnos = async ({ carrera, datos }) => {
       :datos="filtrarPorCarrera(carrera)"
       @editar="editarAlumnos"
       @eliminar="eliminarAlumno"
+      @imprimir="imprimirAlumnos"
     />
   </div>
 </template>
