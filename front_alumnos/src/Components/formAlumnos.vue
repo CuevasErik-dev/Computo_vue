@@ -42,6 +42,13 @@ const enviarForm = () => {
                 </div>
 
                 <div class="form-row">
+
+                    <div class="form-group">
+                        <label>Número de Control</label>
+                        <input type="text" placeholder="Ingrese su número de control" maxlength="15"
+                            v-model="alumno.numeroControl" required>
+                    </div>
+
                     <div class="form-group">
                         <label for="carrera" class="form-label">Carrera</label>
                         <select id="carrera" v-model="alumno.carrera" required>
@@ -84,7 +91,7 @@ const enviarForm = () => {
                         </svg>
                         {{ esEditado ? "Actualizar Alumno" : "Agregar Alumno" }}
                     </button>
-                    
+
                 </div>
             </form>
         </div>
