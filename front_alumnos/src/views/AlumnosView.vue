@@ -253,7 +253,7 @@ const imprimirAlumnos = async ({ carrera, datos }) => {
     import.meta.url,
   ).href;
   const logoAbajo = new URL(
-    "/images/WhatsApp Image 2026-05-06 at 10.34.28.jpeg",
+    "/images/AbajoEncabezado.jpeg",
     import.meta.url,
   ).href;
 
